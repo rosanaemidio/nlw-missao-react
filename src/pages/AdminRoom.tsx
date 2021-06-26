@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom'
 
 import logoImg from '../assets/images/logo.svg';
@@ -7,11 +7,10 @@ import deleteImg from '../assets/images/delete.svg'
 import { Button } from '../components/Button';
 import { RoomCode } from '../components/RoomCode';
 import { Question } from '../components/Question'
-import { useAuth } from '../hooks/useAuth';
+import { useRoom } from '../hooks/useRoom';
 import { database } from '../services/firebase';
 
 import '../styles/room.scss';
-import { useRoom } from '../hooks/useRoom';
 
 
 
@@ -20,10 +19,9 @@ type RoomParams = {
 }
 
 export function AdminRoom() {
-  const { user } = useAuth();
   const history  = useHistory();
   const params = useParams<RoomParams>();
-  const [newQuestion, setNewQuestion] = useState('');
+
  
 
   const roomId = params.id;
