@@ -1,8 +1,10 @@
-import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom'
 
 import logoImg from '../assets/images/logo.svg';
 import deleteImg from '../assets/images/delete.svg'
+import checkImg from  '../assets/images/check.svg'
+import answer from  '../assets/images/answer.svg'
+
 
 import { Button } from '../components/Button';
 import { RoomCode } from '../components/RoomCode';
@@ -11,6 +13,7 @@ import { useRoom } from '../hooks/useRoom';
 import { database } from '../services/firebase';
 
 import '../styles/room.scss';
+import { async } from 'q';
 
 
 
@@ -34,6 +37,17 @@ const {title, questions} = useRoom(roomId)
     })
 
     history.push('/');
+  }
+
+  async function handleCheckQuestionAsAnswer(questionId: string){
+    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      isAnswered: true,
+    });
+  }
+  async function handleHighLightQuestion(questionId: string){
+    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      isHighlighted: true,
+    });
   }
 
   async function handleDeleteQuestion(questionId: string) {
@@ -69,7 +83,28 @@ const {title, questions} = useRoom(roomId)
                 key={question.id}
                 content={question.content}
                 author={question.author}
+                isAnswered={question.isAnswered}
+                isHighlighted={question.isHighlighted}
               >
+                {!question.isAnswered &&(
+                  <>
+                    <button
+                    className="like-button"
+                    type="button"
+                    onClick={() => handleCheckQuestionAsAnswer(question.id)}
+                    >
+                      <img src={checkImg} alt="Marcar pergunta como respondida" />
+                    </button>              
+                    <button
+                    className="like-button"
+                    type="button"
+                    onClick={() => handleHighLightQuestion(question.id)}
+                    >
+                      <img src={answer} alt="Dar destaque à pergunta" />
+                    </button>
+                  </>
+
+                )}
                 <button
                  className="like-button"
                  type="button"
